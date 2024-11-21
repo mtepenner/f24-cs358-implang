@@ -14,7 +14,9 @@ implang2.py:
 In the grammar, the existing "expr" function was renamed to "aexpr" per the assignment guidelines to avoid any confusion.  New rules were added for
 dealing with the equality operators '<' and '==' under the new "expr" rule.  The Eval class has new methods to handle each of these operators.  The 
 implementation was very identical to previous assignments, and I faced no challenges when initially implementing them.  Finally, I added the rule for 
-"forstmt" in the grammar and made a function in Eval() that evaluates an instance of a for loop.  
+"forstmt" in the grammar and made a function in Eval() that evaluates an instance of a for loop. 
+
+When I went to test the sample imp code that was provided, I got this error: "'Tree' object is not callable."  
 
 The .imp files:
 
@@ -33,6 +35,8 @@ For sum.imp, I set x to 0, and iterated using a for loop added i to x until i wa
 It was very hard for me to tell if these worked or not.  I know that the grammar works as I do not get any errors in the output, meaning that the files,
 although potentially may not be correct algorithmically, they do not error out. When running each of these files with implang2.py, I got this exception 
 every time: "Variable '{x}' is undefined."  Test1.imp and test2.imp both work perfectly according to the output, so I encountered confusion in where my 
-code was going wrong.  
+code was going wrong.  I resolved to place a ton of debugging statements throughout the Eval() and Env() class methods so that I can properly trace my output.
+I found there were a few spots where I did not use self.visit(), so I changed those, but still found I was having the same problems as before, meaning that
+correcting those conflicts of interest were not relevant to where my code was actually failing.    
 
 

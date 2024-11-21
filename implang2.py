@@ -34,15 +34,16 @@ from lark.visitors import Interpreter
 grammar = """
   ?start: stmt
    
-   range: "[" expr ".." expr "]" -> range
-
-   stmt: "var" ID "=" expr         -> decl
+  stmt: "var" ID "=" expr         -> decl
        | ID "=" expr               -> assign
        | "if" "(" expr ")" stmt ["else" stmt] -> ifstmt
        | "while" "(" expr ")" stmt -> whstmt
        | "print" "(" expr ")"      -> prstmt
        | "{" stmt (";" stmt)* "}"  -> block
        | "for" ID "in" range stmt  -> forstmt
+  
+  range: "[" expr ".." expr "]"
+
   ?expr: aexpr "<" aexpr         -> lt
        | aexpr "==" aexpr        -> eq
        | aexpr
@@ -57,6 +58,8 @@ grammar = """
   ?atom: "(" expr ")"
        | ID             -> var
        | NUM            -> num
+
+  
 
 
   %import common.WORD   -> ID
@@ -76,52 +79,73 @@ class Env(dict):
     def __init__(self):
         super().__init__()
         self.prev = []  
+    
     def openScope(self):
+        print(f"DEBUG: Opening a new scope. Current state before opening:\n")
+        self.display("Before opening scope:")
         self.prev.append(self.copy())
         self.clear()
+        print("DEBUG: New scope opened.")
+    
     def closeScope(self):
         if not self.prev:
             raise Exception("No scope to close")
+        print(f"DEBUG: Closing scope. Current state before closing:\n")
+        self.display("Before closing scope:")
         restored_scope = self.prev.pop()
         self.clear()
         self.update(restored_scope)
+        print(f"DEBUG: Scope closed. Restored state:\n")
+        self.display("After closing scope:")
+    
     def extend(self,x,v): 
         if x in self:
             raise Exception("Variable '{x}' already defined")
+        print(f"DEBUG: Defining new variable '{x}' with value '{v}'.")
         self[x] = v
+        self.display("State after variable addition:")
+    
     def lookup(self,x): 
+        print(f"DEBUG: Looking up variable '{x}'.")
         if x in self:
-            print (self[x])
+            print(f"DEBUG: Found '{x}' in the current scope with value {self[x]}.")
             return self[x]
-        for env in self.prev:
-            if x in env: 
-                print (env[x])
-                return env[x]
+        else:
+            for env in self.prev:
+                if x in env: 
+                    print(f"DEBUG: Found '{x}' in a previous scope with value {env[x]}.")
+                    return env[x]
         raise Exception("Variable '{x}' is undefined")
+    
     def update_self(self,x,v):
+        print(f"DEBUG: Updating variable '{x}' to new value '{v}'.")
         if x in self:
             self[x] = v
+            self.display("State after update in current scope:")
             return
         for env in self.prev:
             if x in env:
                 env[x] = v
-                print (env[x])
+                self.display("State after update in a previous scope:")
                 return
         raise Exception("Variable '{x}' is undefined")
-    def display(self, msg):
-        print(msg, self, self.prev)
+
+    def display(self, msg="Current Environment:"):
+        print(f"{msg}\nActive Scope: {self}\nPrevious Scopes: {self.prev}\n")
+        #print(msg, self, self.prev)
 
 env = Env()
 # Interpreter
 #
 @v_args(inline=True)
 class Eval(Interpreter):
-    def __init__(self):
-        super().__init__()
-        self.env = Env()
-
-    def num(self, val): 
+    def num(self, val):
+        print(f"DEBUG: Converting number -> {val}")
         return int(val)
+
+    def visit(self, tree):
+        print(f"DEBUG: Visiting tree -> {tree}")
+        return super().visit(tree)
 
     def var(self, name):
         return env.lookup(name)
@@ -140,41 +164,64 @@ class Eval(Interpreter):
             raise ZeroDivisionError("Division by zero not allowed")
         return self.visit(left) // self.visit(right)
     
+    def lt(self, left, right):
+        return self.visit(left) < self.visit(right)
+
+    def eq(self, left, right):
+        return self.visit(left) == self.visit(right)
+
     def decl(self, name, value):
         evaluated_value = self.visit(value)
         env.extend(name, evaluated_value)
         print(env)
+    
     def assign(self, name, value):
         evaluated_value = self.visit(value)
         env.update_self(name, evaluated_value)
         print(env)
+    
     def prstmt(self, value):
         print(self.visit(value))
 
     def block(self, *stmts):
         env.openScope()
+        print("DEBUG: Entering block.")
+        env.display("Environment before executing block:")
         for stmt in stmts:
             self.visit(stmt)
+        print("DEBUG: Exiting block.")
+        env.display("Environment after executing block:")
         env.closeScope()
 
     def ifstmt(self, condition, true_stmt, false_stmt=None):
-        if condition:
+        if self.visit(condition):
             self.visit(true_stmt)
         elif false_stmt is not None:
             self.visit(false_stmt)
 
     def whstmt(self, condition, body):
-        while condition:
+        while self.visit(condition):
             self.visit(body)
+    
     def range(self, start, end):
+        print(f"DEBUG: Evaluating range -> start: {start}, end: {end}")
         return self.visit(start), self.visit(end)
+    
     def forstmt(self, var, range, stmt):
+        print(f"DEBUG: Entering 'for' loop with range: {range}")
         lo, hi = self.visit(range)
+        print(f"DEBUG: Evaluated range bounds -> lo: {lo}, hi: {hi}")
+
         env.openScope()
         for i in range(lo, hi):
+            print(f"DEBUG: Iteration with {var} = {i}")
             env.extend(var, i)
+            print(f"DEBUG: Iteration with {var} = {i}.")
+            env.display("Environment during loop iteration:")
             self.visit(stmt)
         env.closeScope()
+        print("DEBUG: Exiting 'for' loop.")
+        env.display("Environment after loop:")
 
 # A new input routine - sys.stdin.read() 
 # - It allows source program be written in multiple lines
@@ -184,7 +231,7 @@ def main():
     try:
         prog = sys.stdin.read()
         tree = parser.parse(prog)
-        print(tree.pretty())
+        print(prog)
         Eval().visit(tree)
     except Exception as e:
         print(e)
