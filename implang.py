@@ -110,6 +110,7 @@ class Eval(Interpreter):
     
 
     def num(self, val): 
+        print(f"DEBUG: Converting number -> {val}")
         return int(val)
 
     def var(self, name):

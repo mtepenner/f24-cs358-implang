@@ -33,6 +33,8 @@ from lark.visitors import Interpreter
 
 grammar = """
   ?start: stmt
+   
+   range: "[" expr ".." expr "]" -> range
 
    stmt: "var" ID "=" expr         -> decl
        | ID "=" expr               -> assign
@@ -56,7 +58,6 @@ grammar = """
        | ID             -> var
        | NUM            -> num
 
-  range: "[" expr ".." expr "]"
 
   %import common.WORD   -> ID
   %import common.INT    -> NUM
@@ -145,7 +146,7 @@ class Eval(Interpreter):
         print(env)
     def assign(self, name, value):
         evaluated_value = self.visit(value)
-        env.update_self(name, value)
+        env.update_self(name, evaluated_value)
         print(env)
     def prstmt(self, value):
         print(self.visit(value))
@@ -165,13 +166,13 @@ class Eval(Interpreter):
     def whstmt(self, condition, body):
         while condition:
             self.visit(body)
-
+    def range(self, start, end):
+        return self.visit(start), self.visit(end)
     def forstmt(self, var, range, stmt):
-        lo = self.visit(range.children[0])
-        hi = self.visit(range.children[1])
+        lo, hi = self.visit(range)
         env.openScope()
         for i in range(lo, hi):
-            env.extend(str(var), i)
+            env.extend(var, i)
             self.visit(stmt)
         env.closeScope()
 
@@ -183,7 +184,7 @@ def main():
     try:
         prog = sys.stdin.read()
         tree = parser.parse(prog)
-        print(prog)
+        print(tree.pretty())
         Eval().visit(tree)
     except Exception as e:
         print(e)
