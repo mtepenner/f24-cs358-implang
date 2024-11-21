@@ -207,18 +207,20 @@ class Eval(Interpreter):
         print(f"DEBUG: Evaluating range -> start: {start}, end: {end}")
         return self.visit(start), self.visit(end)
     
-    def forstmt(self, var, range, stmt):
+    def forstmt(self, var, ranges, stmt):
         print(f"DEBUG: Entering 'for' loop with range: {range}")
-        lo, hi = self.visit(range)
+        lo, hi = self.visit(ranges)
         print(f"DEBUG: Evaluated range bounds -> lo: {lo}, hi: {hi}")
 
         env.openScope()
+        env.extend(var, hi)
         for i in range(lo, hi):
             print(f"DEBUG: Iteration with {var} = {i}")
-            env.extend(var, i)
+            env.update_self(lo, hi)
             print(f"DEBUG: Iteration with {var} = {i}.")
             env.display("Environment during loop iteration:")
             self.visit(stmt)
+    
         env.closeScope()
         print("DEBUG: Exiting 'for' loop.")
         env.display("Environment after loop:")

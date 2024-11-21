@@ -16,7 +16,9 @@ dealing with the equality operators '<' and '==' under the new "expr" rule.  The
 implementation was very identical to previous assignments, and I faced no challenges when initially implementing them.  Finally, I added the rule for 
 "forstmt" in the grammar and made a function in Eval() that evaluates an instance of a for loop. 
 
-When I went to test the sample imp code that was provided, I got this error: "'Tree' object is not callable."  
+When I went to test the sample imp code that was provided, I got this error: "'Tree' object is not callable."  This issue was related to how 
+I was making function calls in the forstmt function.  I was calling extend in the for loop when it should've been called outside.  Additionally,
+one of the parameters I was passing in was "range" which shadowed python's built in range function.
 
 The .imp files:
 
