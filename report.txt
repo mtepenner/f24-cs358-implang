@@ -16,10 +16,13 @@ dealing with the equality operators '<' and '==' under the new "expr" rule.  The
 implementation was very identical to previous assignments, and I faced no challenges when initially implementing them.  Finally, I added the rule for 
 "forstmt" in the grammar and made a function in Eval() that evaluates an instance of a for loop.  
 
-sum.imp
+The .imp files:
 
 The biggest area I made errors was my placement of semicolons.  It was easier to create each of these files by basing each off of python code, and then
-applying the syntax to the file.
-fac.imp
+applying the syntax to the file.  For my factorial.imp, I initialized 3 variables: n to equal 6 (1 plus the factorial number), x to equal 1 as a starting number
+, and i to equal 1.  i iterates until equal to 5, which is the final time the while loop is executed. x multiplies i, and i is incremented.  Finally, x is printed.
 
-prime.imp 
+I used nested while loops for prime.imp, which initializes x to 2
+
+
+
