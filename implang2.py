@@ -42,7 +42,7 @@ grammar = """
        | "{" stmt (";" stmt)* "}"  -> block
        | "for" ID "in" range stmt  -> forstmt
   
-  range: "[" expr ".." expr "]"
+  range: "[" expr ".." expr "]" -> rangestmt
 
   ?expr: aexpr "<" aexpr         -> lt
        | aexpr "==" aexpr        -> eq
@@ -203,20 +203,19 @@ class Eval(Interpreter):
         while self.visit(condition):
             self.visit(body)
     
-    def range(self, start, end):
+    def rangestmt(self, start, end):
         print(f"DEBUG: Evaluating range -> start: {start}, end: {end}")
         return self.visit(start), self.visit(end)
     
     def forstmt(self, var, ranges, stmt):
         print(f"DEBUG: Entering 'for' loop with range: {range}")
-        lo, hi = self.visit(ranges)
-        print(f"DEBUG: Evaluated range bounds -> lo: {lo}, hi: {hi}")
-
+        visitr = self.visit(ranges)
+        
         env.openScope()
-        env.extend(var, hi)
-        for i in range(lo, hi):
+        env.extend(var, )
+        for i in range(visitr):
             print(f"DEBUG: Iteration with {var} = {i}")
-            env.update_self(lo, hi)
+            env.update_self(var, i)
             print(f"DEBUG: Iteration with {var} = {i}.")
             env.display("Environment during loop iteration:")
             self.visit(stmt)
