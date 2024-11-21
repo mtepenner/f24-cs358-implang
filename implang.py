@@ -135,7 +135,7 @@ class Eval(Interpreter):
 
     def assign(self, name, value):
         evaluated_value = self.visit(value)
-        env.update(name, value)
+        env.update_self(name, value)
 
     def prstmt(self, value):
         print(self.visit(value))

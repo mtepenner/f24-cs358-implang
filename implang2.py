@@ -39,10 +39,13 @@ grammar = """
        | "if" "(" expr ")" stmt ["else" stmt] -> ifstmt
        | "while" "(" expr ")" stmt -> whstmt
        | "print" "(" expr ")"      -> prstmt
-       | "{" stmt (";" stmt)* "}"  -> block      
-
-  ?expr: expr "+" term  -> add
-       | expr "-" term  -> sub
+       | "{" stmt (";" stmt)* "}"  -> block
+       | "for" ID "in" range stmt  -> forstmt
+  ?expr: aexpr "<" aexpr         -> lt
+       | aexpr "==" aexpr        -> eq
+       | aexpr
+  ?aexpr: aexpr "+" term  -> add
+       | aexpr "-" term  -> sub
        | term         
 
   ?term: term "*" atom  -> mul
@@ -52,6 +55,8 @@ grammar = """
   ?atom: "(" expr ")"
        | ID             -> var
        | NUM            -> num
+
+  range: "[" expr ".." expr "]"
 
   %import common.WORD   -> ID
   %import common.INT    -> NUM
@@ -64,7 +69,6 @@ grammar = """
 parser = Lark(grammar, parser='lalr')
 
 debug = False
-
 # Variable environment
 #
 class Env(dict):
@@ -135,7 +139,7 @@ class Eval(Interpreter):
 
     def assign(self, name, value):
         evaluated_value = self.visit(value)
-        env.update(name, value)
+        env.update_self(name, value)
 
     def prstmt(self, value):
         print(self.visit(value))
@@ -155,6 +159,15 @@ class Eval(Interpreter):
     def whstmt(self, condition, body):
         while condition:
             self.visit(body)
+
+    def forstmt(self, var, range, stmt):
+        lo = self.visit(range.children[0])
+        hi = self.visit(range.children[1])
+        env.openScope()
+        for i in range(lo, hi):
+            env.extend(str(var), i)
+            self.visit(stmt)
+        env.closeScope()
 
 # A new input routine - sys.stdin.read() 
 # - It allows source program be written in multiple lines

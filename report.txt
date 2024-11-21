@@ -1,0 +1,25 @@
+Matthew Penner
+
+implang.py:
+
+For this file, I ended up using both the built in update function with the built in environment alongside the update function written
+specifically for the code.  The two working together, one for a variable I called "restored_scope" which passes in a restored environment
+using a prev list and the main function called "update_self" which follows the logic from exercise5, made the results very accurate.  I ran
+both imp files given in the zip file, and both printed accurately without any error messages.  I made some mistakes when writing functions
+for each operation listed out in the grammar.  Instead of visiting each variable, my return statement looked like "return variable1 + variable2"
+rather than "return self.visit(variable1) + self.visit(variable2)."  This confusion was very quickly cleared up.
+
+implang2.py:
+
+In the grammar, the existing "expr" function was renamed to "aexpr" per the assignment guidelines to avoid any confusion.  New rules were added for
+dealing with the equality operators '<' and '==' under the new "expr" rule.  The Eval class has new methods to handle each of these operators.  The 
+implementation was very identical to previous assignments, and I faced no challenges when initially implementing them.  Finally, I added the rule for 
+"forstmt" in the grammar and made a function in Eval() that evaluates an instance of a for loop.  
+
+sum.imp
+
+The biggest area I made errors was my placement of semicolons.  It was easier to create each of these files by basing each off of python code, and then
+applying the syntax to the file.
+fac.imp
+
+prime.imp 
