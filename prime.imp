@@ -5,11 +5,12 @@
   {
 	z = 1;
 	i = 2;	
-        while(x < y)
+        while(i < x)
         {
 		if(x / 2)
 		{
-			z = 0
+			z = 0;
+			i = x	
 		};
 		i = i + 1	
         };

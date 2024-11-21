@@ -22,7 +22,6 @@ The biggest area I made errors was my placement of semicolons.  It was easier to
 applying the syntax to the file.  For my factorial.imp, I initialized 3 variables: n to equal 6 (1 plus the factorial number), x to equal 1 as a starting number
 , and i to equal 1.  i iterates until equal to 5, which is the final time the while loop is executed. x multiplies i, and i is incremented.  Finally, x is printed.
 
-I used nested while loops for prime.imp, which initializes x to 2
-
+When running each of these files with implang2.py, I got this error: "Variable '{x}' is undefined"
 
 
