@@ -18,7 +18,9 @@ implementation was very identical to previous assignments, and I faced no challe
 
 When I went to test the sample imp code that was provided, I got this error: "'Tree' object is not callable."  This issue was related to how 
 I was making function calls in the forstmt function.  I was calling extend in the for loop when it should've been called outside.  Additionally,
-one of the parameters I was passing in was "range" which shadowed python's built in range function.
+one of the parameters I was passing in was "range" which shadowed python's built in range function.  A relatively simple typo that can be easy to
+overlook. When I made these changes, I got the output:
+"Variable '{x}' is undefined."  
 
 The .imp files:
 
