@@ -90,9 +90,12 @@ class Env(dict):
         self[x] = v
     def lookup(self,x): 
         if x in self:
+            print (self[x])
             return self[x]
         for env in self.prev:
-            if x in env: return env[x]
+            if x in env: 
+                print (env[x])
+                return env[x]
         raise Exception("Variable '{x}' is undefined")
     def update_self(self,x,v):
         if x in self:
@@ -101,6 +104,7 @@ class Env(dict):
         for env in self.prev:
             if x in env:
                 env[x] = v
+                print (env[x])
                 return
         raise Exception("Variable '{x}' is undefined")
     def display(self, msg):
@@ -111,7 +115,9 @@ env = Env()
 #
 @v_args(inline=True)
 class Eval(Interpreter):
-    
+    def __init__(self):
+        super().__init__()
+        self.env = Env()
 
     def num(self, val): 
         return int(val)
@@ -136,11 +142,11 @@ class Eval(Interpreter):
     def decl(self, name, value):
         evaluated_value = self.visit(value)
         env.extend(name, evaluated_value)
-
+        print(env)
     def assign(self, name, value):
         evaluated_value = self.visit(value)
         env.update_self(name, value)
-
+        print(env)
     def prstmt(self, value):
         print(self.visit(value))
 
