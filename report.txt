@@ -32,11 +32,10 @@ applying the syntax to the file.  For my fac.imp, I initialized 3 variables: n t
 , and i to equal 1.  i iterates until equal to 5, which is the final time the while loop is executed. x multiplies i, and i is incremented.  Finally, x is 
 printed.
 
-For my prime.imp file, I set variable y = 10 as that is the limit for this program.  Variable x was set to 2 as that is the first prime number. I had 
-trouble implementing the logic as the grammar posed limitations on what I could and could not do with my program.  Instead of using modulus as that is 
-the wisest choice for this assignment, I resorted to using division due to restrictions on what we could put in our lark parser. Variable z is a boolean 
-value that is set to either 1 or 0, and the code changes it depending on if x is a prime number. If z is equal to 1, x is printed out, and this process 
-is repeated until the maximum parameter is met.
+For my prime.imp file, I set variable y = 10 as that is the limit for this program.  Variable x was set to 2 as that is the first prime number. I used nested
+while loops.  Another variable, i, was used to check for divisibility.  Variable z was a boolean value that is set to 1 (equivalent of true) and is set to
+0 if it is divisible by i.  I divided x by i and then multiplied it by i to see if the result was equal to x as an alternate method to using modulus.  x increments
+every single time the outer while loop runs.  
 
 For sum.imp, I set x to 0, and iterated using a for loop added i to x until i was equal to 100.
 
@@ -47,4 +46,5 @@ code was going wrong.  I resolved to place a ton of debugging statements through
 I found there were a few spots where I did not use self.visit(), so I changed those, but still found I was having the same problems as before, meaning that
 correcting those conflicts of interest were not relevant to where my code was actually failing.    
 
+At the last second, I realized I forgot to include var in the imp files for defining new variables, which is why I was getting that error.  
 

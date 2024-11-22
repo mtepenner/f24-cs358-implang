@@ -1,5 +1,5 @@
-{ x = 0;
-  for i in [ 1 .. 100 ]
+{ var x = 0;
+  for i in [ 1 .. 101 ]
   {
 	x = x + i
   };
