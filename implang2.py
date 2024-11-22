@@ -173,12 +173,12 @@ class Eval(Interpreter):
     def decl(self, name, value):
         evaluated_value = self.visit(value)
         env.extend(name, evaluated_value)
-        print(env)
+        #print(env)
     
     def assign(self, name, value):
         evaluated_value = self.visit(value)
         env.update_self(name, evaluated_value)
-        print(env)
+        #print(env)
     
     def prstmt(self, value):
         print(self.visit(value))
