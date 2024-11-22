@@ -1,7 +1,7 @@
 { n = 6;
   x = n;
   i = n;
-  while(i < n)
+  while(i < 6)
   {
 	x = x * n;
 	n = n - i;

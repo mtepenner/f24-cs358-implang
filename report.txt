@@ -22,7 +22,8 @@ one of the parameters I was passing in was "range" which shadowed python's built
 overlook. When I made these changes, I got the output:
 "Variable '{x}' is undefined."  
 
-I was able to get the two test functions for implang2 to work, meaning I could narrow my issues down to just the .imp files.
+I was able to get the two test functions for implang2 to work after doing some revisions to my forstmt function.  I made the mistake of putting the 
+extend function in the loop instead of update, which is where it belonged.  
 
 The .imp files:
 
