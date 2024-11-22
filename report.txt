@@ -28,7 +28,7 @@ extend function in the loop instead of update, which is where it belonged.
 The .imp files:
 
 The biggest area I made errors was my placement of semicolons.  It was easier to create each of these files by basing each off of python code, and then
-applying the syntax to the file.  For my fac.imp, I initialized 3 variables: n to equal 6 (1 plus the factorial number), x to equal 1 as a starting number
+applying the syntax to the file.  For my fac.imp, I initialized 3 variables: n to equal 5, x to equal 1 as a starting number
 , and i to equal 1.  i iterates until equal to 5, which is the final time the while loop is executed. x multiplies i, and i is incremented.  Finally, x is 
 printed.
 
