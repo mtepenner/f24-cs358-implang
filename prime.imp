@@ -1,7 +1,7 @@
 { var x = 2;
-  var y = 10;
+  var n = 10;
 
-  while(x < y)
+  while(x < n)
   {
 	var i = 2;
 	var z = 1;
