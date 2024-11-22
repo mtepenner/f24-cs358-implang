@@ -22,6 +22,8 @@ one of the parameters I was passing in was "range" which shadowed python's built
 overlook. When I made these changes, I got the output:
 "Variable '{x}' is undefined."  
 
+I was able to get the two test functions for implang2 to work, meaning I could narrow my issues down to just the .imp files.
+
 The .imp files:
 
 The biggest area I made errors was my placement of semicolons.  It was easier to create each of these files by basing each off of python code, and then
@@ -31,8 +33,9 @@ printed.
 
 For my prime.imp file, I set variable y = 10 as that is the limit for this program.  Variable x was set to 2 as that is the first prime number. I had 
 trouble implementing the logic as the grammar posed limitations on what I could and could not do with my program.  Instead of using modulus as that is 
-the wisest choice for this assignment, I resorted to using division. Variable z is a boolean value that is set to either 1 or 0, and the code changes 
-it depending on if x is a prime number. If z is equal to 1, x is printed out, and this process is repeated until the maximum parameter is met.
+the wisest choice for this assignment, I resorted to using division due to restrictions on what we could put in our lark parser. Variable z is a boolean 
+value that is set to either 1 or 0, and the code changes it depending on if x is a prime number. If z is equal to 1, x is printed out, and this process 
+is repeated until the maximum parameter is met.
 
 For sum.imp, I set x to 0, and iterated using a for loop added i to x until i was equal to 100.
 

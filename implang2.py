@@ -81,52 +81,52 @@ class Env(dict):
         self.prev = []  
     
     def openScope(self):
-        print(f"DEBUG: Opening a new scope. Current state before opening:\n")
-        self.display("Before opening scope:")
+        #print(f"DEBUG: Opening a new scope. Current state before opening:\n")
+        #self.display("Before opening scope:")
         self.prev.append(self.copy())
         self.clear()
-        print("DEBUG: New scope opened.")
+        #print("DEBUG: New scope opened.")
     
     def closeScope(self):
         if not self.prev:
             raise Exception("No scope to close")
-        print(f"DEBUG: Closing scope. Current state before closing:\n")
-        self.display("Before closing scope:")
+        #print(f"DEBUG: Closing scope. Current state before closing:\n")
+        #self.display("Before closing scope:")
         restored_scope = self.prev.pop()
         self.clear()
         self.update(restored_scope)
-        print(f"DEBUG: Scope closed. Restored state:\n")
-        self.display("After closing scope:")
+        #print(f"DEBUG: Scope closed. Restored state:\n")
+        #self.display("After closing scope:")
     
     def extend(self,x,v): 
         if x in self:
             raise Exception("Variable '{x}' already defined")
-        print(f"DEBUG: Defining new variable '{x}' with value '{v}'.")
+        #print(f"DEBUG: Defining new variable '{x}' with value '{v}'.")
         self[x] = v
-        self.display("State after variable addition:")
+        #self.display("State after variable addition:")
     
     def lookup(self,x): 
-        print(f"DEBUG: Looking up variable '{x}'.")
+        #print(f"DEBUG: Looking up variable '{x}'.")
         if x in self:
-            print(f"DEBUG: Found '{x}' in the current scope with value {self[x]}.")
+            #print(f"DEBUG: Found '{x}' in the current scope with value {self[x]}.")
             return self[x]
         else:
             for env in self.prev:
                 if x in env: 
-                    print(f"DEBUG: Found '{x}' in a previous scope with value {env[x]}.")
+                    #print(f"DEBUG: Found '{x}' in a previous scope with value {env[x]}.")
                     return env[x]
         raise Exception("Variable '{x}' is undefined")
     
     def update_self(self,x,v):
-        print(f"DEBUG: Updating variable '{x}' to new value '{v}'.")
+        #print(f"DEBUG: Updating variable '{x}' to new value '{v}'.")
         if x in self:
             self[x] = v
-            self.display("State after update in current scope:")
+            #self.display("State after update in current scope:")
             return
         for env in self.prev:
             if x in env:
                 env[x] = v
-                self.display("State after update in a previous scope:")
+                #self.display("State after update in a previous scope:")
                 return
         raise Exception("Variable '{x}' is undefined")
 
@@ -140,11 +140,11 @@ env = Env()
 @v_args(inline=True)
 class Eval(Interpreter):
     def num(self, val):
-        print(f"DEBUG: Converting number -> {val}")
+        #print(f"DEBUG: Converting number -> {val}")
         return int(val)
 
     def visit(self, tree):
-        print(f"DEBUG: Visiting tree -> {tree}")
+        #print(f"DEBUG: Visiting tree -> {tree}")
         return super().visit(tree)
 
     def var(self, name):
@@ -185,12 +185,12 @@ class Eval(Interpreter):
 
     def block(self, *stmts):
         env.openScope()
-        print("DEBUG: Entering block.")
-        env.display("Environment before executing block:")
+        #print("DEBUG: Entering block.")
+        #env.display("Environment before executing block:")
         for stmt in stmts:
             self.visit(stmt)
-        print("DEBUG: Exiting block.")
-        env.display("Environment after executing block:")
+        #print("DEBUG: Exiting block.")
+        #env.display("Environment after executing block:")
         env.closeScope()
 
     def ifstmt(self, condition, true_stmt, false_stmt=None):
@@ -204,25 +204,27 @@ class Eval(Interpreter):
             self.visit(body)
     
     def rangestmt(self, start, end):
-        print(f"DEBUG: Evaluating range -> start: {start}, end: {end}")
-        return self.visit(start), self.visit(end)
+        #print(f"DEBUG: Evaluating range -> start: {start}, end: {end}")
+        start_val = self.visit(start)
+        end_val = self.visit(end)
+        return range(start_val, end_val)
     
     def forstmt(self, var, ranges, stmt):
-        print(f"DEBUG: Entering 'for' loop with range: {range}")
+        #print(f"DEBUG: Entering 'for' loop with range: {range}")
         visitr = self.visit(ranges)
         
         env.openScope()
-        env.extend(var, )
-        for i in range(visitr):
-            print(f"DEBUG: Iteration with {var} = {i}")
+        env.extend(var, stmt)
+        for i in visitr:
+            #print(f"DEBUG: Iteration with {var} = {i}")
             env.update_self(var, i)
-            print(f"DEBUG: Iteration with {var} = {i}.")
-            env.display("Environment during loop iteration:")
+            
+            #env.display("Environment during loop iteration:")
             self.visit(stmt)
     
         env.closeScope()
-        print("DEBUG: Exiting 'for' loop.")
-        env.display("Environment after loop:")
+        #print("DEBUG: Exiting 'for' loop.")
+        #env.display("Environment after loop:")
 
 # A new input routine - sys.stdin.read() 
 # - It allows source program be written in multiple lines
