@@ -9,7 +9,6 @@ This project implements an interpreter for "ImpLang", a custom imperative progra
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Contributing](#contributing)
-- [License](#license)
 
 ## Installation 🛠️
 
